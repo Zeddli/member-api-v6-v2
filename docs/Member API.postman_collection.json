@@ -1,0 +1,926 @@
+{
+	"info": {
+		"_postman_id": "12c468e8-dbc4-4cc2-b187-36144423a29c",
+		"name": "Member API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28573934"
+	},
+	"item": [
+		{
+			"name": "Member",
+			"item": [
+				{
+					"name": "Get Member by handle",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members/phead",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"phead"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Member profile completeness",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIiwiQ29ubmVjdCBTdXBwb3J0IiwiYWRtaW5pc3RyYXRvciIsInRlc3RSb2xlIiwiYWFhIiwidG9ueV90ZXN0XzEiLCJDb25uZWN0IE1hbmFnZXIiLCJDb25uZWN0IEFkbWluIiwiY29waWxvdCIsIkNvbm5lY3QgQ29waWxvdCBNYW5hZ2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJUb255SiIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiODU0Nzg5OSIsImlhdCI6MTU0OTc5MTYxMSwiZW1haWwiOiJ0amVmdHMrZml4QHRvcGNvZGVyLmNvbSIsImp0aSI6ImY5NGQxZTI2LTNkMGUtNDZjYS04MTE1LTg3NTQ1NDRhMDhmMSJ9.q_Db9Gw8bn54xlythrZZUrJQyak-XrdOwPsj6ddgZ4M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members/phead/profileCompleteness",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"phead",
+								"profileCompleteness"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Member Signature",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJwaGVhZCIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiMjI3NDI3NjQiLCJpYXQiOjE1NDk3OTk1NjksImVtYWlsIjoiZW1haWxAZG9tYWluLmNvbS56IiwianRpIjoiOWM0NTExYzUtYzE2NS00YTFiLTg5OWUtYjY1YWQwZTAyYjU1In0.kOPm331fsiXj2y_7by2ohjoaGWIGon0TxKL1znbpijU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members/uid-signature?type=userflow",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"uid-signature"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "userflow"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Member",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJwaGVhZCIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiMjI3NDI3NjQiLCJpYXQiOjE1NDk3OTk1NjksImVtYWlsIjoiZW1haWxAZG9tYWluLmNvbS56IiwianRpIjoiOWM0NTExYzUtYzE2NS00YTFiLTg5OWUtYjY1YWQwZTAyYjU1In0.kOPm331fsiXj2y_7by2ohjoaGWIGon0TxKL1znbpijU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"availableForGigs\": true,\r\n    \"namesAndHandleAppearance\": \"handleOnly\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/v6/members/phead",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"phead"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Member - Set new Email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJwaGVhZCIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiMjI3NDI3NjQiLCJpYXQiOjE1NDk3OTk1NjksImVtYWlsIjoiZW1haWxAZG9tYWluLmNvbS56IiwianRpIjoiOWM0NTExYzUtYzE2NS00YTFiLTg5OWUtYjY1YWQwZTAyYjU1In0.kOPm331fsiXj2y_7by2ohjoaGWIGon0TxKL1znbpijU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"new-email@topcoder.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/v6/members/phead",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"phead"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Member Verify Email - Old Email token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJwaGVhZCIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiMjI3NDI3NjQiLCJpYXQiOjE1NDk3OTk1NjksImVtYWlsIjoiZW1haWxAZG9tYWluLmNvbS56IiwianRpIjoiOWM0NTExYzUtYzE2NS00YTFiLTg5OWUtYjY1YWQwZTAyYjU1In0.kOPm331fsiXj2y_7by2ohjoaGWIGon0TxKL1znbpijU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members/phead/verify?token=23e8a52a-098b-4856-88ce-f474a00ebf86",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"phead",
+								"verify"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "23e8a52a-098b-4856-88ce-f474a00ebf86"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Member Verify Email - New Email token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJwaGVhZCIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiMjI3NDI3NjQiLCJpYXQiOjE1NDk3OTk1NjksImVtYWlsIjoiZW1haWxAZG9tYWluLmNvbS56IiwianRpIjoiOWM0NTExYzUtYzE2NS00YTFiLTg5OWUtYjY1YWQwZTAyYjU1In0.kOPm331fsiXj2y_7by2ohjoaGWIGon0TxKL1znbpijU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members/phead/verify?token=d20ee9e4-c793-41f0-b5e9-81a222e667a6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"phead",
+								"verify"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "d20ee9e4-c793-41f0-b5e9-81a222e667a6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Member Trait",
+			"item": [
+				{
+					"name": "Get Member Traits",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIiwiQ29ubmVjdCBTdXBwb3J0IiwiYWRtaW5pc3RyYXRvciIsInRlc3RSb2xlIiwiYWFhIiwidG9ueV90ZXN0XzEiLCJDb25uZWN0IE1hbmFnZXIiLCJDb25uZWN0IEFkbWluIiwiY29waWxvdCIsIkNvbm5lY3QgQ29waWxvdCBNYW5hZ2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJUb255SiIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiODU0Nzg5OSIsImlhdCI6MTU0OTc5MTYxMSwiZW1haWwiOiJ0amVmdHMrZml4QHRvcGNvZGVyLmNvbSIsImp0aSI6ImY5NGQxZTI2LTNkMGUtNDZjYS04MTE1LTg3NTQ1NDRhMDhmMSJ9.q_Db9Gw8bn54xlythrZZUrJQyak-XrdOwPsj6ddgZ4M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members/phead/traits",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"phead",
+								"traits"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Member Traits",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJwaGVhZCIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiMjI3NDI3NjQiLCJpYXQiOjE1NDk3OTk1NjksImVtYWlsIjoiZW1haWxAZG9tYWluLmNvbS56IiwianRpIjoiOWM0NTExYzUtYzE2NS00YTFiLTg5OWUtYjY1YWQwZTAyYjU1In0.kOPm331fsiXj2y_7by2ohjoaGWIGon0TxKL1znbpijU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\r\n    \"traitId\": \"work\",\r\n    \"categoryName\": \"Work\",\r\n    \"traits\": {\r\n        \"traitId\": \"work\",\r\n        \"data\": [{\r\n            \"industry\": \"Banking\",\r\n            \"companyName\": \"JP Morgan\",\r\n            \"position\": \"Manager\"\r\n        }, {\r\n            \"industry\": \"TechAndTechnologyService\",\r\n            \"companyName\": \"OpenAI\",\r\n            \"position\": \"Manager\"\r\n        }]\r\n    }\r\n}]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/v6/members/phead/traits",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"phead",
+								"traits"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Member Traits - subscription",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJwaGVhZCIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiMjI3NDI3NjQiLCJpYXQiOjE1NDk3OTk1NjksImVtYWlsIjoiZW1haWxAZG9tYWluLmNvbS56IiwianRpIjoiOWM0NTExYzUtYzE2NS00YTFiLTg5OWUtYjY1YWQwZTAyYjU1In0.kOPm331fsiXj2y_7by2ohjoaGWIGon0TxKL1znbpijU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\r\n    \"traitId\": \"subscription\",\r\n    \"categoryName\": \"Subscription\",\r\n    \"traits\": {\r\n        \"traitId\": \"subscription\",\r\n        \"data\": [\"OpenAI\", \"ChatGPT\"]\r\n    }\r\n}]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/v6/members/phead/traits",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"phead",
+								"traits"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Member Traits - Personalization",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJwaGVhZCIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiMjI3NDI3NjQiLCJpYXQiOjE1NDk3OTk1NjksImVtYWlsIjoiZW1haWxAZG9tYWluLmNvbS56IiwianRpIjoiOWM0NTExYzUtYzE2NS00YTFiLTg5OWUtYjY1YWQwZTAyYjU1In0.kOPm331fsiXj2y_7by2ohjoaGWIGon0TxKL1znbpijU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\r\n    \"traitId\": \"personalization\",\r\n    \"categoryName\": \"Personalization\",\r\n    \"traits\": {\r\n        \"traitId\": \"personalization\",\r\n        \"data\": [{\r\n            \"public\": true\r\n        }, {\r\n            \"random-key\": \"random-value\"\r\n        }]\r\n    }\r\n}]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/v6/members/phead/traits",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"phead",
+								"traits"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Member Traits",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJwaGVhZCIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiMjI3NDI3NjQiLCJpYXQiOjE1NDk3OTk1NjksImVtYWlsIjoiZW1haWxAZG9tYWluLmNvbS56IiwianRpIjoiOWM0NTExYzUtYzE2NS00YTFiLTg5OWUtYjY1YWQwZTAyYjU1In0.kOPm331fsiXj2y_7by2ohjoaGWIGon0TxKL1znbpijU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\r\n    \"traitId\": \"work\",\r\n    \"categoryName\": \"Work\",\r\n    \"traits\": {\r\n        \"traitId\": \"work\",\r\n        \"data\": [{\r\n            \"industry\": \"Banking\",\r\n            \"companyName\": \"JP Morgan 2\",\r\n            \"position\": \"Manager 2\"\r\n        }, {\r\n            \"industry\": \"TechAndTechnologyService\",\r\n            \"companyName\": \"OpenAI 2\",\r\n            \"position\": \"Manager 2\"\r\n        }]\r\n    }\r\n}]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/v6/members/phead/traits",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"phead",
+								"traits"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Member Traits",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJwaGVhZCIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiMjI3NDI3NjQiLCJpYXQiOjE1NDk3OTk1NjksImVtYWlsIjoiZW1haWxAZG9tYWluLmNvbS56IiwianRpIjoiOWM0NTExYzUtYzE2NS00YTFiLTg5OWUtYjY1YWQwZTAyYjU1In0.kOPm331fsiXj2y_7by2ohjoaGWIGon0TxKL1znbpijU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members/phead/traits?traitIds=work",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"phead",
+								"traits"
+							],
+							"query": [
+								{
+									"key": "traitIds",
+									"value": "work"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "Health",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Distribution Stats",
+			"item": [
+				{
+					"name": "Get distribution stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members/stats/distribution?track=DATA_SCIENCE&subTrack=SRM",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"stats",
+								"distribution"
+							],
+							"query": [
+								{
+									"key": "track",
+									"value": "DATA_SCIENCE"
+								},
+								{
+									"key": "subTrack",
+									"value": "SRM"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Member Statistics",
+			"item": [
+				{
+					"name": "Get History Stats",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members/ACRush/stats/history",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"ACRush",
+								"stats",
+								"history"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get History Stats for private groups",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJwaGVhZCIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiMjI3NDI3NjQiLCJpYXQiOjE1NDk3OTk1NjksImVtYWlsIjoiZW1haWxAZG9tYWluLmNvbS56IiwianRpIjoiOWM0NTExYzUtYzE2NS00YTFiLTg5OWUtYjY1YWQwZTAyYjU1In0.kOPm331fsiXj2y_7by2ohjoaGWIGon0TxKL1znbpijU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members/ACRush/stats/history?groupIds=20000000,20000001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"ACRush",
+								"stats",
+								"history"
+							],
+							"query": [
+								{
+									"key": "groupIds",
+									"value": "20000000,20000001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Stats",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members/ACRush/stats",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"ACRush",
+								"stats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Stats for private group",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJwaGVhZCIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiMjI3NDI3NjQiLCJpYXQiOjE1NDk3OTk1NjksImVtYWlsIjoiZW1haWxAZG9tYWluLmNvbS56IiwianRpIjoiOWM0NTExYzUtYzE2NS00YTFiLTg5OWUtYjY1YWQwZTAyYjU1In0.kOPm331fsiXj2y_7by2ohjoaGWIGon0TxKL1znbpijU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members/ACRush/stats?groupIds=20000000,20000001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"ACRush",
+								"stats"
+							],
+							"query": [
+								{
+									"key": "groupIds",
+									"value": "20000000,20000001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Skills",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members/ACRush/skills",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"ACRush",
+								"skills"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Skills",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIiwiQ29ubmVjdCBTdXBwb3J0IiwiYWRtaW5pc3RyYXRvciIsInRlc3RSb2xlIiwiYWFhIiwidG9ueV90ZXN0XzEiLCJDb25uZWN0IE1hbmFnZXIiLCJDb25uZWN0IEFkbWluIiwiY29waWxvdCIsIkNvbm5lY3QgQ29waWxvdCBNYW5hZ2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJUb255SiIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiODU0Nzg5OSIsImlhdCI6MTU0OTc5MTYxMSwiZW1haWwiOiJ0amVmdHMrZml4QHRvcGNvZGVyLmNvbSIsImp0aSI6ImY5NGQxZTI2LTNkMGUtNDZjYS04MTE1LTg3NTQ1NDRhMDhmMSJ9.q_Db9Gw8bn54xlythrZZUrJQyak-XrdOwPsj6ddgZ4M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"skillId\": \"65c724e7-1f9e-4396-a432-44fa7ecb1998\",\r\n    \"displayModeId\": \"1555aa05-a764-4f0b-b3e0-51b824382abb\",\r\n    \"levels\": [\r\n        \"0f27234f-d89e-4b07-9ea1-649afbb29841\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/v6/members/jiangliwu/skills",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"jiangliwu",
+								"skills"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Skills",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIiwiQ29ubmVjdCBTdXBwb3J0IiwiYWRtaW5pc3RyYXRvciIsInRlc3RSb2xlIiwiYWFhIiwidG9ueV90ZXN0XzEiLCJDb25uZWN0IE1hbmFnZXIiLCJDb25uZWN0IEFkbWluIiwiY29waWxvdCIsIkNvbm5lY3QgQ29waWxvdCBNYW5hZ2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJUb255SiIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiODU0Nzg5OSIsImlhdCI6MTU0OTc5MTYxMSwiZW1haWwiOiJ0amVmdHMrZml4QHRvcGNvZGVyLmNvbSIsImp0aSI6ImY5NGQxZTI2LTNkMGUtNDZjYS04MTE1LTg3NTQ1NDRhMDhmMSJ9.q_Db9Gw8bn54xlythrZZUrJQyak-XrdOwPsj6ddgZ4M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"skillId\": \"65c724e7-1f9e-4396-a432-44fa7ecb1998\",\r\n    \"displayModeId\": \"1555aa05-a764-4f0b-b3e0-51b824382abb\",\r\n    \"levels\": [\r\n        \"0f27234f-d89e-4b07-9ea1-649afbb29841\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/v6/members/jiangliwu/skills",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"jiangliwu",
+								"skills"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Search",
+			"item": [
+				{
+					"name": "Search Member",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members?handle=phead&perPage=2&page=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members"
+							],
+							"query": [
+								{
+									"key": "handle",
+									"value": "phead"
+								},
+								{
+									"key": "perPage",
+									"value": "2"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search by skill",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members/searchBySkills?id=2b45af95-18d4-416c-b576-ca107c33762f&id=f9d0be22-6713-4757-a94a-081fe9232034&id=65c724e7-1f9e-4396-a432-44fa7ecb1998",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"searchBySkills"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "2b45af95-18d4-416c-b576-ca107c33762f"
+								},
+								{
+									"key": "id",
+									"value": "f9d0be22-6713-4757-a94a-081fe9232034"
+								},
+								{
+									"key": "id",
+									"value": "65c724e7-1f9e-4396-a432-44fa7ecb1998"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Autocomplete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlcyI6WyJUb3Bjb2RlciBVc2VyIiwiQ29ubmVjdCBTdXBwb3J0IiwiYWRtaW5pc3RyYXRvciIsInRlc3RSb2xlIiwiYWFhIiwidG9ueV90ZXN0XzEiLCJDb25uZWN0IE1hbmFnZXIiLCJDb25uZWN0IEFkbWluIiwiY29waWxvdCIsIkNvbm5lY3QgQ29waWxvdCBNYW5hZ2VyIl0sImlzcyI6Imh0dHBzOi8vYXBpLnRvcGNvZGVyLWRldi5jb20iLCJoYW5kbGUiOiJUb255SiIsImV4cCI6MTk4MDk5Mjc4OCwidXNlcklkIjoiODU0Nzg5OSIsImlhdCI6MTU0OTc5MTYxMSwiZW1haWwiOiJ0amVmdHMrZml4QHRvcGNvZGVyLmNvbSIsImp0aSI6ImY5NGQxZTI2LTNkMGUtNDZjYS04MTE1LTg3NTQ1NDRhMDhmMSJ9.q_Db9Gw8bn54xlythrZZUrJQyak-XrdOwPsj6ddgZ4M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/v6/members/autocomplete?term=p",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v6",
+								"members",
+								"autocomplete"
+							],
+							"query": [
+								{
+									"key": "term",
+									"value": "p"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
