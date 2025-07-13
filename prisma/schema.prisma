@@ -195,7 +195,6 @@ model memberHistoryStats {
   updatedAt   DateTime? @updatedAt
   updatedBy   String?
 
-  @@unique([userId, isPrivate])
   @@index([userId])
   @@index([groupId])
 }
@@ -268,7 +267,6 @@ model memberStats {
   updatedBy   String?
 
   @@index([userId])
-  @@unique([userId, isPrivate])
 }
 
 model memberCopilotStats {

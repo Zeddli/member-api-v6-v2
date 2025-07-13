@@ -730,9 +730,6 @@ CREATE INDEX "memberHistoryStats_userId_idx" ON "memberHistoryStats"("userId");
 CREATE INDEX "memberHistoryStats_groupId_idx" ON "memberHistoryStats"("groupId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "memberHistoryStats_userId_isPrivate_key" ON "memberHistoryStats"("userId", "isPrivate");
-
--- CreateIndex
 CREATE INDEX "memberDevelopHistoryStats_historyStatsId_idx" ON "memberDevelopHistoryStats"("historyStatsId");
 
 -- CreateIndex
@@ -740,9 +737,6 @@ CREATE INDEX "memberDataScienceHistoryStats_historyStatsId_idx" ON "memberDataSc
 
 -- CreateIndex
 CREATE INDEX "memberStats_userId_idx" ON "memberStats"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "memberStats_userId_isPrivate_key" ON "memberStats"("userId", "isPrivate");
 
 -- CreateIndex
 CREATE INDEX "memberCopilotStats_memberStatsId_idx" ON "memberCopilotStats"("memberStatsId");

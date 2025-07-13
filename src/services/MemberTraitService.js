@@ -16,10 +16,10 @@ const TRAIT_IDS = ['basic_info', 'education', 'work', 'communities', 'languages'
 
 const TRAIT_FIELDS = ['userId', 'traitId', 'categoryName', 'traits', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy']
 
-const DeviceType = ['Console', 'Desktop', 'Laptop', 'Smartphone', 'Tablet', 'Wearable'];
-const SoftwareType = ['DeveloperTools', 'Browser', 'Productivity', 'GraphAndDesign', 'Utilities'];
-const ServiceProviderType = ['InternetServiceProvider', 'MobileCarrier', 'Television', 'FinancialInstitution', 'Other'];
-const WorkIndustryType = ['Banking', 'ConsumerGoods', 'Energy', 'Entertainment', 'HealthCare', 'Pharma', 'PublicSector', 'TechAndTechnologyService', 'Telecoms', 'TravelAndHospitality'];
+const DeviceType = ['Console', 'Desktop', 'Laptop', 'Smartphone', 'Tablet', 'Wearable']
+const SoftwareType = ['DeveloperTools', 'Browser', 'Productivity', 'GraphAndDesign', 'Utilities']
+const ServiceProviderType = ['InternetServiceProvider', 'MobileCarrier', 'Television', 'FinancialInstitution', 'Other']
+const WorkIndustryType = ['Banking', 'ConsumerGoods', 'Energy', 'Entertainment', 'HealthCare', 'Pharma', 'PublicSector', 'TechAndTechnologyService', 'Telecoms', 'TravelAndHospitality']
 
 /**
  * Used to generate prisma query parameters
@@ -52,7 +52,7 @@ const traitIdModelMap = {
 
 const auditFields = [
   'createdAt', 'updatedAt', 'createdBy', 'updatedBy'
-];
+]
 
 /**
  * Convert prisma data to response format
@@ -61,14 +61,14 @@ const auditFields = [
  * @param {Array} traitIds trait id list
  * @returns trait data in response
  */
-function convertPrismaToRes(traitData, userId, traitIds = TRAIT_IDS) {
+function convertPrismaToRes (traitData, userId, traitIds = TRAIT_IDS) {
   // reverse traitIdPrismaMap
-  const prismaTraitIdMap = {};
+  const prismaTraitIdMap = {}
   for (let key of Object.keys(traitIdPrismaMap)) {
     prismaTraitIdMap[traitIdPrismaMap[key]] = key
   }
   // read from prisma data
-  const ret = [];
+  const ret = []
   for (let key of Object.keys(prismaTraitIdMap)) {
     if (!traitData[key] || traitData[key].length === 0) {
       continue
@@ -91,7 +91,7 @@ function convertPrismaToRes(traitData, userId, traitIds = TRAIT_IDS) {
     }
     traitItem.traits.data = _.map(prismaValues,
       t => _.omit(t, ['id', 'memberTraitId', ...auditFields]))
-    
+
     ret.push(traitItem)
   }
   // handle subscription and hobby fields
@@ -120,7 +120,7 @@ function convertPrismaToRes(traitData, userId, traitIds = TRAIT_IDS) {
     })
   }
   // handle special data
-  if (_.includes(traitIds, 'personalization') && 
+  if (_.includes(traitIds, 'personalization') &&
     !_.isEmpty(traitData.personalization)
   ) {
     const collectInfo = {}
@@ -139,8 +139,8 @@ function convertPrismaToRes(traitData, userId, traitIds = TRAIT_IDS) {
     })
   }
   _.forEach(ret, r => {
-    r.createdAt = r.createdAt?.getTime()
-    r.updatedAt = r.updatedAt?.getTime()
+    r.createdAt = r.createdAt ? r.createdAt.getTime() : null
+    r.updatedAt = r.updatedAt ? r.updatedAt.getTime() : null
   })
   return ret
 }
@@ -151,18 +151,20 @@ function convertPrismaToRes(traitData, userId, traitIds = TRAIT_IDS) {
  * @param {Array} traitIds string array
  * @returns member trait prisma data
  */
-async function queryTraits(userId, traitIds=TRAIT_IDS) {
+async function queryTraits (userId, traitIds = TRAIT_IDS) {
   // build prisma query
   const prismaFilter = {
     where: { userId },
     include: {}
-  };
+  }
   // for each trait id, get prisma model and put it into "include"
-  _.forEach(_.pick(traitIdPrismaMap, traitIds), t => prismaFilter.include[t] = true);
+  _.forEach(_.pick(traitIdPrismaMap, traitIds), t => {
+    prismaFilter.include[t] = true
+  })
   const traitData = await prisma.memberTraits.findUnique(prismaFilter)
   if (!traitData) {
     // trait data not found. Directly return.
-    return { id: null, data: []}
+    return { id: null, data: [] }
   }
   // convert trait data to response format
   return {
@@ -237,7 +239,6 @@ getTraits.schema = {
   })
 }
 
-
 /**
  * Build prisma data for creating/updating traits
  * @param {Object} data query data
@@ -245,8 +246,8 @@ getTraits.schema = {
  * @param {Array} result result
  * @returns prisma data
  */
-function buildTraitPrismaData(data, operatorId, result) {
-  const prismaData = {};
+function buildTraitPrismaData (data, operatorId, result) {
+  const prismaData = {}
   _.forEach(data, (item) => {
     const traitId = item.traitId
     const modelKey = traitIdPrismaMap[traitId]
@@ -256,7 +257,7 @@ function buildTraitPrismaData(data, operatorId, result) {
         t.updatedBy = operatorId
       })
       prismaData[modelKey] = {
-        createMany: { 
+        createMany: {
           data: item.traits.data
         }
       }
@@ -277,7 +278,7 @@ function buildTraitPrismaData(data, operatorId, result) {
         }
       })
       prismaData['personalization'] = {
-        createMany: { 
+        createMany: {
           data: valuePairs
         }
       }
@@ -286,7 +287,6 @@ function buildTraitPrismaData(data, operatorId, result) {
   })
   return prismaData
 }
-
 
 /**
  * Create member traits.
@@ -326,6 +326,21 @@ async function createTraits (currentUser, handle, data) {
     await prisma.memberTraits.create({
       data: prismaData
     })
+  }
+  // send data to event bus
+  for (let item of data) {
+    const trait = { ...item }
+    trait.userId = helper.bigIntToNumber(member.userId)
+    trait.createdBy = Number(currentUser.userId || config.TC_WEBSERVICE_USERID)
+    if (trait.traits) {
+      trait.traits = { 'traitId': trait.traitId, 'data': trait.traits.data }
+    } else {
+      trait.traits = { 'traitId': trait.traitId, 'data': [] }
+    }
+    // convert date time
+    trait.createdAt = new Date().getTime()
+    // post bus event
+    await helper.postBusEvent(constants.TOPICS.MemberTraitCreated, trait)
   }
 
   // merge result
@@ -394,7 +409,7 @@ const traitSchemas = {
   }))
 }
 
-const traitSchemaSwitch = _.map(_.keys(traitSchemas, 
+const traitSchemaSwitch = _.map(_.keys(traitSchemas,
   k => ({ is: k, then: traitSchemas[k] })))
 
 createTraits.schema = {
@@ -513,7 +528,7 @@ async function removeTraits (currentUser, handle, query) {
   })
 
   existingTraits = _.filter(existingTraits, t => !traitIds.includes(t.traitId))
-  
+
   await updateSkillScoreDeduction(currentUser, member, existingTraits)
   // post bus event
   if (memberProfileTraitIds.length > 0) {
@@ -547,36 +562,36 @@ async function updateSkillScoreDeduction (currentUser, member, existingTraits) {
   let education = false
 
   let traits = []
-  if(existingTraits){
+  if (existingTraits) {
     traits = existingTraits
   } else {
     traits = await getTraits(currentUser, member.handle, {})
   }
 
-  let education_trait = _.find(traits, function(trait){ return trait.traitId == "education"})
+  let educationTrait = _.find(traits, function (trait) { return trait.traitId === 'education' })
 
-  if(education_trait && education == false){
+  if (educationTrait && education === false) {
     education = true
   }
 
-  let work_trait = _.find(traits, function(trait){ return trait.traitId == "work"})
+  let workTrait = _.find(traits, function (trait) { return trait.traitId === 'work' })
 
-  if(work_trait && workHistory==false){
+  if (workTrait && workHistory === false) {
     workHistory = true
   }
 
   // TAL-77 : missing experience, reduce match by 2%
-  if(!workHistory) {
+  if (!workHistory) {
     skillScoreDeduction = skillScoreDeduction - 0.02
   }
 
   // TAL-77 : missing education, reduce match by 2%
-  if(!education) {
+  if (!education) {
     skillScoreDeduction = skillScoreDeduction - 0.02
- }
-  
- // Only update if the value is new or has changed
- if(member.skillScoreDeduction === null || member.skillScoreDeduction != skillScoreDeduction){
+  }
+
+  // Only update if the value is new or has changed
+  if (member.skillScoreDeduction === null || member.skillScoreDeduction !== skillScoreDeduction) {
     await prisma.member.update({
       where: { userId: member.userId },
       data: {

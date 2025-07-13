@@ -1,8 +1,6 @@
 /**
  * Contains all routes
  */
-
-const constants = require('../app-constants')
 const { SCOPES: {
   MEMBERS
 } } = require('config')
@@ -12,6 +10,32 @@ module.exports = {
     get: {
       controller: 'HealthController',
       method: 'checkHealth'
+    }
+  },
+  '/members': {
+    get: {
+      controller: 'SearchController',
+      method: 'searchMembers',
+      auth: 'jwt',
+      allowNoToken: true,
+      scopes: [MEMBERS.READ, MEMBERS.ALL]
+    }
+  },
+  '/members/searchBySkills': {
+    get: {
+      controller: 'SearchController',
+      method: 'searchMembersBySkills',
+      auth: 'jwt',
+      allowNoToken: true,
+      scopes: [MEMBERS.READ, MEMBERS.ALL]
+    }
+  },
+  '/members/autocomplete': {
+    get: {
+      controller: 'SearchController',
+      method: 'autocomplete',
+      auth: 'jwt',
+      scopes: [MEMBERS.READ, MEMBERS.ALL]
     }
   },
   '/members/uid-signature': {
@@ -88,4 +112,50 @@ module.exports = {
       scopes: [MEMBERS.DELETE, MEMBERS.ALL]
     }
   },
+  '/members/stats/distribution': {
+    get: {
+      controller: 'StatisticsController',
+      method: 'getDistribution'
+    }
+  },
+  '/members/:handle/stats/history': {
+    get: {
+      controller: 'StatisticsController',
+      method: 'getHistoryStats',
+      auth: 'jwt',
+      allowNoToken: true,
+      scopes: [MEMBERS.READ, MEMBERS.ALL]
+    }
+  },
+  '/members/:handle/stats': {
+    get: {
+      controller: 'StatisticsController',
+      method: 'getMemberStats',
+      auth: 'jwt',
+      allowNoToken: true,
+      scopes: [MEMBERS.READ, MEMBERS.ALL]
+    }
+  },
+  '/members/:handle/skills': {
+    get: {
+      controller: 'StatisticsController',
+      method: 'getMemberSkills',
+      auth: 'jwt',
+      allowNoToken: true,
+      scopes: [MEMBERS.READ, MEMBERS.ALL]
+    },
+    post: {
+      controller: 'StatisticsController',
+      method: 'createMemberSkills',
+      auth: 'jwt',
+      scopes: [MEMBERS.CREATE, MEMBERS.ALL]
+    },
+    patch: {
+      controller: 'StatisticsController',
+      method: 'partiallyUpdateMemberSkills',
+      auth: 'jwt',
+      // access: constants.ADMIN_ROLES,
+      scopes: [MEMBERS.UPDATE, MEMBERS.ALL]
+    }
+  }
 }

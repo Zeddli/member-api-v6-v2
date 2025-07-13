@@ -138,6 +138,8 @@ To make local development easier, I create a mock server at `mock`.
 
 You can start it with `node mock/mock-api.js` and it will listen to port `4000`
 
+This mock service will simulate request and responses for other APIs like auth0 and event bus API.
+
 ## Local Configs
 
 Please run following commands to set necessary configs:
@@ -147,13 +149,11 @@ export AUTH0_URL="http://localhost:4000/v5/auth0"
 export BUSAPI_URL="http://localhost:4000/v5"
 export AUTH0_CLIENT_ID=xyz
 export AUTH0_CLIENT_SECRET=xyz
-export LOOKER_API_BASE_URL="http://localhost:4000/v5/looker"
-export LOOKER_API_CLIENT_ID=xyz
-export LOOKER_API_CLIENT_SECRET=xyz
 export USERFLOW_PRIVATE_KEY=mysecret
+export GROUPS_API_URL="http://localhost:4000/v5/groups"
 ```
 
-These commands will set auth0, event bus pi and looker api to local mock server.
+These commands will set auth0 and event bus api to local mock server.
 
 ## Local Deployment
 
@@ -172,7 +172,6 @@ Make sure you have followed above steps to
 - setup local mock api and set local configs
   - it will really call service and mock api
 
-Unit tests use `aws-sdk-mock` to mock S3 operations. So you can safely run tests without S3 configs.
 
 Then you can run:
 ```bash
