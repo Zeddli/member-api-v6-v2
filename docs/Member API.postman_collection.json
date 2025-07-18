@@ -802,6 +802,130 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Create History Stats",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{ "key": "token", "value": "{{token}}", "type": "string" }
+							]
+						},
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"develop\": [\n    {\n      \"challengeId\": 123,\n      \"challengeName\": \"Challenge Example\",\n      \"ratingDate\": \"2023-01-01\",\n      \"newRating\": 1500,\n      \"subTrack\": \"SRM\",\n      \"subTrackId\": 1\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v6/members/{{handle}}/stats/history",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v6", "members", "{{handle}}", "stats", "history" ]
+						}
+					},
+					"response": [
+						{
+							"code": 201,
+							"body": "{\n  \"id\": 1,\n  \"userId\": 1,\n  \"develop\": [\n    {\n      \"challengeId\": 123,\n      \"challengeName\": \"Challenge Example\",\n      \"ratingDate\": \"2023-01-01T00:00:00.000Z\",\n      \"newRating\": 1500,\n      \"subTrack\": \"SRM\",\n      \"subTrackId\": 1\n    }\n  ]\n}",
+							"header": [ { "key": "Content-Type", "value": "application/json" } ]
+						}
+					]
+				},
+				{
+					"name": "Update History Stats",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{ "key": "token", "value": "{{token}}", "type": "string" }
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"develop\": [\n    {\n      \"challengeId\": 123,\n      \"challengeName\": \"Patched Challenge\",\n      \"ratingDate\": \"2023-01-01\",\n      \"newRating\": 1550,\n      \"subTrack\": \"SRM\",\n      \"subTrackId\": 1\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v6/members/{{handle}}/stats/history",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v6", "members", "{{handle}}", "stats", "history" ]
+						}
+					},
+					"response": [
+						{
+							"code": 200,
+							"body": "{\n  \"id\": 1,\n  \"userId\": 1,\n  \"develop\": [\n    {\n      \"challengeId\": 123,\n      \"challengeName\": \"Patched Challenge\",\n      \"ratingDate\": \"2023-01-01T00:00:00.000Z\",\n      \"newRating\": 1550,\n      \"subTrack\": \"SRM\",\n      \"subTrackId\": 1\n    }\n  ]\n}",
+							"header": [ { "key": "Content-Type", "value": "application/json" } ]
+						}
+					]
+				},
+				{
+					"name": "Create Member Stats",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{ "key": "token", "value": "{{token}}", "type": "string" }
+							]
+						},
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"challenges\": 10,\n  \"wins\": 3,\n  \"develop\": {\n    \"challenges\": 5,\n    \"wins\": 2,\n    \"mostRecentSubmission\": \"2023-03-01\",\n    \"mostRecentEventDate\": \"2023-03-02\",\n    \"items\": [\n      {\n        \"name\": \"SRM\",\n        \"subTrackId\": 1,\n        \"challenges\": 2,\n        \"wins\": 1\n      }\n    ]\n  },\n  \"design\": {\n    \"challenges\": 2,\n    \"wins\": 1,\n    \"items\": []\n  },\n  \"dataScience\": {\n    \"challenges\": 1,\n    \"wins\": 0,\n    \"items\": []\n  },\n  \"copilot\": {\n    \"challenges\": 0,\n    \"wins\": 0,\n    \"items\": []\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v6/members/{{handle}}/stats",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v6", "members", "{{handle}}", "stats" ]
+						}
+					},
+					"response": [
+						{
+							"code": 201,
+							"body": "{\n  \"id\": 1,\n  \"userId\": 1,\n  \"develop\": {\n    \"challenges\": 5,\n    \"wins\": 2,\n    \"mostRecentSubmission\": \"2023-03-01T00:00:00.000Z\",\n    \"mostRecentEventDate\": \"2023-03-02T00:00:00.000Z\",\n    \"items\": [\n      {\n        \"name\": \"SRM\",\n        \"subTrackId\": 1,\n        \"challenges\": 2,\n        \"wins\": 1\n      }\n    ]\n  },\n  \"design\": {\n    \"challenges\": 2,\n    \"wins\": 1,\n    \"items\": []\n  },\n  \"dataScience\": {\n    \"challenges\": 1,\n    \"wins\": 0,\n    \"items\": []\n  },\n  \"copilot\": {\n    \"challenges\": 0,\n    \"wins\": 0,\n    \"items\": []\n  }\n}",
+							"header": [ { "key": "Content-Type", "value": "application/json" } ]
+						}
+					]
+				},
+				{
+					"name": "Update Member Stats",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{ "key": "token", "value": "{{token}}", "type": "string" }
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"develop\": {\n    \"items\": [\n      {\n        \"name\": \"SRM Patched\",\n        \"subTrackId\": 1,\n        \"challenges\": 3,\n        \"wins\": 2\n      }\n    ]\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v6/members/{{handle}}/stats",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v6", "members", "{{handle}}", "stats" ]
+						}
+					},
+					"response": [
+						{
+							"code": 200,
+							"body": "{\n  \"id\": 1,\n  \"userId\": 1,\n  \"develop\": {\n    \"items\": [\n      {\n        \"name\": \"SRM Patched\",\n        \"subTrackId\": 1,\n        \"challenges\": 3,\n        \"wins\": 2\n      }\n    ]\n  }\n}",
+							"header": [ { "key": "Content-Type", "value": "application/json" } ]
+						}
+					]
 				}
 			]
 		},

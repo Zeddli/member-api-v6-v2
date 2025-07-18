@@ -956,6 +956,152 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/ErrorModel'
+  '/members/{handle}/stats/history':
+    get:
+      tags:
+        - Statistics
+      description: Get member history statistics, by default only returns the public topcoder history statistics.
+      parameters:
+        - in: path
+          name: handle
+          required: true
+          type: string
+        - name: groupIds
+          in: query
+          required: false
+          type: string
+          description: comma separated group ids (returns members public history statistics if groupIds is not provided)
+        - name: fields
+          in: query
+          required: false
+          type: string
+          description: >
+            fields=fieldName1,fieldName2,...,fieldN
+            
+            parameter for choosing which fields of Member History Stats that will be included in response.
+
+            + userId - Select the field userId
+            
+            + groupId - Select the field groupId
+
+            + handle - Select the field handle
+
+            + handleLower - Select the field handleLower
+
+            + DEVELOP - Select the field DEVELOP
+            
+            + DATA_SCIENCE - Select the field DATA_SCIENCE
+
+            + createdAt - Select the field createdAt
+
+            + createdBy - Select the field createdBy
+            
+            + updatedAt - Select the field updatedAt
+
+            + updatedBy - Select the field updatedBy
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/MemberHistoryStats'
+        '400':
+          description: Bad request data
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+    post:
+      tags:
+        - Statistics
+      description: Create member stats history for the specified member.
+      security:
+        - bearer: []
+      parameters:
+        - in: path
+          name: handle
+          required: true
+          type: string
+      requestBody:
+        description: Stats history data to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/MemberHistoryStatsRequest'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/MemberHistoryStats'
+        '400':
+          description: Bad request data
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '401':
+          description: Miss or wrong authentication credentials
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: No permission
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+    patch:
+      tags:
+        - Statistics
+      description: Partially update member stats history for the specified member.
+      security:
+        - bearer: []
+      parameters:
+        - in: path
+          name: handle
+          required: true
+          type: string
+      requestBody:
+        description: Stats history data to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/MemberHistoryStatsRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/MemberHistoryStats'
+        '400':
+          description: Bad request data
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '401':
+          description: Miss or wrong authentication credentials
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: No permission
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
   '/members/{handle}/stats':
     get:
       tags:
@@ -980,13 +1126,13 @@ paths:
             
             parameter for choosing which fields of MemberStats that will be included in response.
 
-
+            
             + userId - Select the field userId
-
+            
             + handle - Select the field handle
-
+            
             + handleLower - Select the field handleLower
-
+            
             + maxRating - Select the field maxRating
 
             + challenges - Select the field challenges
@@ -1000,13 +1146,13 @@ paths:
             + dataScience - Select the field dataScience
 
             + copilot - Select the field copilot
-
+            
             + updatedAt - Select the field updatedAt
 
             + createdAt - Select the field createdAt
 
             + createdBy - Select the field createdBy
-
+            
             + updatedBy - Select the field updatedBy
       responses:
         '200':
@@ -1029,56 +1175,132 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/ErrorModel'
-  '/members/{handle}/stats/history':
-    get:
+    post:
       tags:
         - Statistics
-      description: Get member history statistics, by default only returns the public topcoder history statistics.
+      description: Create member stats for the specified member.
+      security:
+        - bearer: []
       parameters:
         - in: path
           name: handle
           required: true
           type: string
-        - name: groupIds
-          in: query
-          required: false
+      requestBody:
+        description: Member stats data to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/MemberStatsRequest'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/MemberStats'
+        '400':
+          description: Bad request data
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '401':
+          description: Miss or wrong authentication credentials
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: No permission
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+    patch:
+      tags:
+        - Statistics
+      description: Partially update member stats for the specified member.
+      security:
+        - bearer: []
+      parameters:
+        - in: path
+          name: handle
+          required: true
           type: string
-          description: comma separated group ids (returns members public history statistics if groupIds is not provided)
-        - name: fields
-          in: query
-          required: false
-          type: string
-          description: >
-            fields=fieldName1,fieldName2,...,fieldN
-            
-            parameter for choosing which fields of Member History Stats that will be included in response.
-            
-            + userId - Select the field userId
-            
-            + groupId - Select the field groupId
-            
-            + handle - Select the field handle
-            
-            + handleLower - Select the field handleLower
-            
-            + DEVELOP - Select the field DEVELOP
-            
-            + DATA_SCIENCE - Select the field DATA_SCIENCE
-            
-            + createdAt - Select the field createdAt
-            
-            + createdBy - Select the field createdBy
-            
-            + updatedAt - Select the field updatedAt
-            
-            + updatedBy - Select the field updatedBy
+      requestBody:
+        description: Member stats data to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/MemberStatsRequest'
       responses:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/MemberHistoryStats'
+            $ref: '#/definitions/MemberStats'
         '400':
           description: Bad request data
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '401':
+          description: Miss or wrong authentication credentials
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: No permission
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '404':
+          description: Not found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+    delete:
+      tags:
+        - Statistics
+      description: delete member profile traits
+      security:
+        - bearer: []
+      parameters:
+        - in: path
+          name: handle
+          required: true
+          type: string
+        - name: traitIds
+          in: query
+          required: false
+          type: string
+          description: |
+            traitIds value separated with comma
+            + basic_id
+            + work
+            + skill
+            + education
+            + communities
+            + languages
+            + hobby
+            + organization
+            + device
+            + software
+            + service_provider
+            + subscription
+            + personalization
+            + connect_info
+      responses:
+        '200':
+          description: 'OK, response is empty'
+        '400':
+          description: Bad request data
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '403':
+          description: No permission
           schema:
             $ref: '#/definitions/ErrorModel'
         '404':
@@ -1817,12 +2039,6 @@ definitions:
                 submissionRate:
                   type: number
                   format: double
-                passedScreening:
-                  type: number
-                  format: int64
-                screeningSuccessRate:
-                  type: number
-                  format: double
                 mostRecentEventDate:
                   type: string
                   format: date-time
@@ -2450,6 +2666,162 @@ definitions:
       message:
         type: string
         description: the error message
+  MemberHistoryStatsRequest:
+    type: object
+    properties:
+      groupId:
+        type: integer
+      isPrivate:
+        type: boolean
+      develop:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+            challengeId:
+              type: integer
+            challengeName:
+              type: string
+            ratingDate:
+              type: string
+              format: date-time
+            newRating:
+              type: integer
+            subTrack:
+              type: string
+            subTrackId:
+              type: integer
+      dataScience:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              type: integer
+            challengeId:
+              type: integer
+            challengeName:
+              type: string
+            date:
+              type: string
+              format: date-time
+            rating:
+              type: integer
+            placement:
+              type: integer
+            percentile:
+              type: number
+            subTrack:
+              type: string
+            subTrackId:
+              type: integer
+  MemberStatsRequest:
+    type: object
+    properties:
+      challenges:
+        type: integer
+      wins:
+        type: integer
+      groupId:
+        type: integer
+      isPrivate:
+        type: boolean
+      develop:
+        type: object
+        properties:
+          challenges:
+            type: integer
+          wins:
+            type: integer
+          mostRecentSubmission:
+            type: string
+            format: date-time
+          mostRecentEventDate:
+            type: string
+            format: date-time
+          items:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                subTrackId:
+                  type: integer
+                challenges:
+                  type: integer
+                wins:
+                  type: integer
+      design:
+        type: object
+        properties:
+          challenges:
+            type: integer
+          wins:
+            type: integer
+          items:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                subTrackId:
+                  type: integer
+                challenges:
+                  type: integer
+                wins:
+                  type: integer
+      dataScience:
+        type: object
+        properties:
+          challenges:
+            type: integer
+          wins:
+            type: integer
+          items:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                subTrackId:
+                  type: integer
+                challenges:
+                  type: integer
+                wins:
+                  type: integer
+      copilot:
+        type: object
+        properties:
+          challenges:
+            type: integer
+          wins:
+            type: integer
+          items:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                subTrackId:
+                  type: integer
+                challenges:
+                  type: integer
+                wins:
+                  type: integer
 parameters:
   page:
     name: page
