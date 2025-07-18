@@ -385,13 +385,573 @@ partiallyUpdateMemberSkills.schema = {
   }).required()
 }
 
+// --- Joi Schema Constants ---
+const developHistoryItemSchema = Joi.object({
+  id: Joi.number().integer().optional(),
+  challengeId: Joi.number().integer().messages({
+    'any.required': 'challengeId is required',
+    'number.base': 'challengeId must be a number'
+  }).required(),
+  challengeName: Joi.string().messages({
+    'any.required': 'challengeName is required',
+    'string.base': 'challengeName must be a string'
+  }).required(),
+  ratingDate: Joi.date().messages({
+    'any.required': 'ratingDate is required',
+    'date.base': 'ratingDate must be a valid date'
+  }).required(),
+  newRating: Joi.number().integer().messages({
+    'any.required': 'newRating is required',
+    'number.base': 'newRating must be a number'
+  }).required(),
+  subTrack: Joi.string().messages({
+    'any.required': 'subTrack is required',
+    'string.base': 'subTrack must be a string'
+  }).required(),
+  subTrackId: Joi.number().integer().messages({
+    'any.required': 'subTrackId is required',
+    'number.base': 'subTrackId must be a number'
+  }).required()
+}).unknown(false)
+
+const dataScienceHistoryItemSchema = Joi.object({
+  id: Joi.number().integer().optional(),
+  challengeId: Joi.number().integer().messages({
+    'any.required': 'challengeId is required',
+    'number.base': 'challengeId must be a number'
+  }).required(),
+  challengeName: Joi.string().messages({
+    'any.required': 'challengeName is required',
+    'string.base': 'challengeName must be a string'
+  }).required(),
+  date: Joi.date().messages({
+    'any.required': 'date is required',
+    'date.base': 'date must be a valid date'
+  }).required(),
+  rating: Joi.number().integer().messages({
+    'any.required': 'rating is required',
+    'number.base': 'rating must be a number'
+  }).required(),
+  placement: Joi.number().integer().messages({
+    'any.required': 'placement is required',
+    'number.base': 'placement must be a number'
+  }).required(),
+  percentile: Joi.number().messages({
+    'any.required': 'percentile is required',
+    'number.base': 'percentile must be a number'
+  }).required(),
+  subTrack: Joi.string().messages({
+    'any.required': 'subTrack is required',
+    'string.base': 'subTrack must be a string'
+  }).required(),
+  subTrackId: Joi.number().integer().messages({
+    'any.required': 'subTrackId is required',
+    'number.base': 'subTrackId must be a number'
+  }).required()
+}).unknown(false)
+
+const statsItemSchema = Joi.object({
+  id: Joi.number().integer().optional(),
+  name: Joi.string().messages({
+    'any.required': 'name is required',
+    'string.base': 'name must be a string'
+  }).required(),
+  subTrackId: Joi.number().integer().messages({
+    'any.required': 'subTrackId is required',
+    'number.base': 'subTrackId must be a number'
+  }).required(),
+  challenges: Joi.number().integer().messages({
+    'number.base': 'challenges must be a number'
+  }).optional(),
+  wins: Joi.number().integer().messages({
+    'number.base': 'wins must be a number'
+  }).optional(),
+  mostRecentSubmission: Joi.date().messages({
+    'date.base': 'mostRecentSubmission must be a valid date'
+  }).optional(),
+  mostRecentEventDate: Joi.date().messages({
+    'date.base': 'mostRecentEventDate must be a valid date'
+  }).optional()
+}).unknown(false)
+
+// --- createHistoryStats & updateHistoryStats ---
+const historyStatsSchema = Joi.object({
+  groupId: Joi.number().integer().optional(),
+  isPrivate: Joi.boolean().optional(),
+  develop: Joi.array().items(developHistoryItemSchema).optional(),
+  dataScience: Joi.array().items(dataScienceHistoryItemSchema).optional()
+}).unknown(false).messages({
+  'object.unknown': 'Unknown field in stats history payload'
+})
+
+// --- createMemberStats & updateMemberStats ---
+const statsObjectSchema = Joi.object({
+  id: Joi.number().integer().optional(),
+  challenges: Joi.number().integer().messages({ 'number.base': 'challenges must be a number' }).optional(),
+  wins: Joi.number().integer().messages({ 'number.base': 'wins must be a number' }).optional(),
+  mostRecentSubmission: Joi.date().messages({ 'date.base': 'mostRecentSubmission must be a valid date' }).optional(),
+  mostRecentEventDate: Joi.date().messages({ 'date.base': 'mostRecentEventDate must be a valid date' }).optional(),
+  items: Joi.array().items(statsItemSchema).optional()
+}).unknown(false)
+
+const memberStatsSchema = Joi.object({
+  groupId: Joi.number().integer().optional(),
+  isPrivate: Joi.boolean().optional(),
+  challenges: Joi.number().integer().messages({ 'number.base': 'challenges must be a number' }).optional(),
+  wins: Joi.number().integer().messages({ 'number.base': 'wins must be a number' }).optional(),
+  maxRatingId: Joi.number().integer().messages({ 'number.base': 'maxRatingId must be a number' }).optional(),
+  develop: statsObjectSchema.optional(),
+  design: statsObjectSchema.optional(),
+  dataScience: statsObjectSchema.optional(),
+  copilot: statsObjectSchema.optional()
+}).unknown(false).messages({
+  'object.unknown': 'Unknown field in member stats payload'
+})
+
+async function createHistoryStats(currentUser, handle, data) {
+  // Validate member
+  const member = await helper.getMemberByHandle(handle)
+  if (!helper.canManageMember(currentUser, member)) {
+    throw new errors.ForbiddenError('You are not allowed to create the member history statistics.')
+  }
+
+  // Joi validation schema for payload
+  const { error: validationError1 } = historyStatsSchema.validate(data)
+  if (validationError1) {
+    throw new errors.BadRequestError(validationError1.details.map(e => e.message).join(', '))
+  }
+
+  // Prepare data for Prisma
+  const createdBy = currentUser.handle || currentUser.sub
+  const historyStatsData = {
+    userId: member.userId,
+    createdBy,
+    isPrivate: data.isPrivate || false
+  }
+  if (data.groupId) {
+    historyStatsData.groupId = data.groupId
+    historyStatsData.isPrivate = true
+  }
+  if (data.develop && data.develop.length > 0) {
+    historyStatsData.develop = {
+      create: data.develop.map(item => ({
+        ...item,
+        ratingDate: new Date(item.ratingDate),
+        createdBy
+      }))
+    }
+  }
+  if (data.dataScience && data.dataScience.length > 0) {
+    historyStatsData.dataScience = {
+      create: data.dataScience.map(item => ({
+        ...item,
+        date: new Date(item.date),
+        createdBy
+      }))
+    }
+  }
+
+  // Create record
+  const created = await prisma.memberHistoryStats.create({
+    data: historyStatsData,
+    include: { develop: true, dataScience: true }
+  })
+  return prismaHelper.buildStatsHistoryResponse(member, created)
+}
+
+async function updateHistoryStats(currentUser, handle, data) {
+  // Validate member
+  const member = await helper.getMemberByHandle(handle)
+  if (!helper.canManageMember(currentUser, member)) {
+    throw new errors.ForbiddenError('You are not allowed to update the member history statistics.')
+  }
+
+  // Joi validation schema for payload
+  const { error: validationError2 } = historyStatsSchema.validate(data)
+  if (validationError2) {
+    throw new errors.BadRequestError(validationError2.details.map(e => e.message).join(', '))
+  }
+
+  // Find existing stats record
+  const stats = await prisma.memberHistoryStats.findFirst({
+    where: {
+      userId: member.userId,
+      groupId: data.groupId || null
+    },
+    include: { develop: true, dataScience: true }
+  })
+  if (!stats) {
+    throw new errors.NotFoundError('Member history statistics not found')
+  }
+
+  const updatedBy = currentUser.handle || currentUser.sub
+
+  await prisma.$transaction(async (tx) => {
+    // DEVELOP upsert/delete
+    const dbDevelopIds = new Set((stats.develop || []).map(d => d.id))
+    const payloadDevelopIds = new Set((data.develop || []).filter(d => d.id).map(d => d.id))
+    // Delete develop items not in payload
+    for (const dbId of dbDevelopIds) {
+      if (!payloadDevelopIds.has(dbId)) {
+        await tx.memberDevelopHistoryStats.delete({ where: { id: dbId } })
+      }
+    }
+    // Upsert develop items
+    for (const item of data.develop || []) {
+      if (item.id) {
+        await tx.memberDevelopHistoryStats.update({
+          where: { id: item.id },
+          data: {
+            challengeId: item.challengeId,
+            challengeName: item.challengeName,
+            ratingDate: new Date(item.ratingDate),
+            newRating: item.newRating,
+            subTrack: item.subTrack,
+            subTrackId: item.subTrackId,
+            updatedBy
+          }
+        })
+      } else {
+        await tx.memberDevelopHistoryStats.create({
+          data: {
+            historyStatsId: stats.id,
+            challengeId: item.challengeId,
+            challengeName: item.challengeName,
+            ratingDate: new Date(item.ratingDate),
+            newRating: item.newRating,
+            subTrack: item.subTrack,
+            subTrackId: item.subTrackId,
+            createdBy: updatedBy
+          }
+        })
+      }
+    }
+    // DATA_SCIENCE upsert/delete
+    const dbDataScienceIds = new Set((stats.dataScience || []).map(d => d.id))
+    const payloadDataScienceIds = new Set((data.dataScience || []).filter(d => d.id).map(d => d.id))
+    // Delete dataScience items not in payload
+    for (const dbId of dbDataScienceIds) {
+      if (!payloadDataScienceIds.has(dbId)) {
+        await tx.memberDataScienceHistoryStats.delete({ where: { id: dbId } })
+      }
+    }
+    // Upsert dataScience items
+    for (const item of data.dataScience || []) {
+      if (item.id) {
+        await tx.memberDataScienceHistoryStats.update({
+          where: { id: item.id },
+          data: {
+            challengeId: item.challengeId,
+            challengeName: item.challengeName,
+            date: new Date(item.date),
+            rating: item.rating,
+            placement: item.placement,
+            percentile: item.percentile,
+            subTrack: item.subTrack,
+            subTrackId: item.subTrackId,
+            updatedBy
+          }
+        })
+      } else {
+        await tx.memberDataScienceHistoryStats.create({
+          data: {
+            historyStatsId: stats.id,
+            challengeId: item.challengeId,
+            challengeName: item.challengeName,
+            date: new Date(item.date),
+            rating: item.rating,
+            placement: item.placement,
+            percentile: item.percentile,
+            subTrack: item.subTrack,
+            subTrackId: item.subTrackId,
+            createdBy: updatedBy
+          }
+        })
+      }
+    }
+    // Update main stats record
+    await tx.memberHistoryStats.update({
+      where: { id: stats.id },
+      data: { updatedBy }
+    })
+  })
+
+  // Return updated record
+  const updated = await prisma.memberHistoryStats.findFirst({
+    where: { userId: member.userId, groupId: data.groupId || null },
+    include: { develop: true, dataScience: true }
+  })
+  return prismaHelper.buildStatsHistoryResponse(member, updated)
+}
+
+async function createMemberStats(currentUser, handle, data) {
+  // Validate member
+  const member = await helper.getMemberByHandle(handle)
+  if (!helper.canManageMember(currentUser, member)) {
+    throw new errors.ForbiddenError('You are not allowed to create the member statistics.')
+  }
+
+  // Joi validation schema for payload
+  const { error: validationError3 } = memberStatsSchema.validate(data)
+  if (validationError3) {
+    throw new errors.BadRequestError(validationError3.details.map(e => e.message).join(', '))
+  }
+
+  // Prepare data for Prisma
+  const createdBy = currentUser.handle || currentUser.sub
+  const memberStatsData = {
+    userId: member.userId,
+    createdBy,
+    isPrivate: data.isPrivate || false
+  }
+  if (data.groupId) {
+    memberStatsData.groupId = data.groupId
+    memberStatsData.isPrivate = true
+  }
+  if (data.challenges !== undefined) memberStatsData.challenges = data.challenges
+  if (data.wins !== undefined) memberStatsData.wins = data.wins
+  if (data.maxRatingId) memberStatsData.memberRatingId = data.maxRatingId
+
+  // Nested develop
+  if (data.develop) {
+    memberStatsData.develop = {
+      create: {
+        challenges: data.develop.challenges,
+        wins: data.develop.wins,
+        mostRecentSubmission: data.develop.mostRecentSubmission ? new Date(data.develop.mostRecentSubmission) : undefined,
+        mostRecentEventDate: data.develop.mostRecentEventDate ? new Date(data.develop.mostRecentEventDate) : undefined,
+        createdBy,
+        items: data.develop.items && data.develop.items.length > 0 ? {
+          create: data.develop.items.map(item => ({
+            ...item,
+            mostRecentSubmission: item.mostRecentSubmission ? new Date(item.mostRecentSubmission) : undefined,
+            mostRecentEventDate: item.mostRecentEventDate ? new Date(item.mostRecentEventDate) : undefined,
+            createdBy
+          }))
+        } : undefined
+      }
+    }
+  }
+  // Nested design
+  if (data.design) {
+    memberStatsData.design = {
+      create: {
+        challenges: data.design.challenges,
+        wins: data.design.wins,
+        mostRecentSubmission: data.design.mostRecentSubmission ? new Date(data.design.mostRecentSubmission) : undefined,
+        mostRecentEventDate: data.design.mostRecentEventDate ? new Date(data.design.mostRecentEventDate) : undefined,
+        createdBy,
+        items: data.design.items && data.design.items.length > 0 ? {
+          create: data.design.items.map(item => ({
+            ...item,
+            mostRecentSubmission: item.mostRecentSubmission ? new Date(item.mostRecentSubmission) : undefined,
+            mostRecentEventDate: item.mostRecentEventDate ? new Date(item.mostRecentEventDate) : undefined,
+            createdBy
+          }))
+        } : undefined
+      }
+    }
+  }
+  // Nested dataScience
+  if (data.dataScience) {
+    memberStatsData.dataScience = {
+      create: {
+        challenges: data.dataScience.challenges,
+        wins: data.dataScience.wins,
+        mostRecentSubmission: data.dataScience.mostRecentSubmission ? new Date(data.dataScience.mostRecentSubmission) : undefined,
+        mostRecentEventDate: data.dataScience.mostRecentEventDate ? new Date(data.dataScience.mostRecentEventDate) : undefined,
+        mostRecentEventName: data.dataScience.mostRecentEventName,
+        createdBy
+        // srm and marathon handled below
+      }
+    }
+    // TODO: handle srm and marathon nested creation if needed
+  }
+  // Nested copilot
+  if (data.copilot) {
+    memberStatsData.copilot = { create: { ...data.copilot, createdBy } }
+  }
+
+  // Create record
+  const created = await prisma.memberStats.create({
+    data: memberStatsData,
+    include: prismaHelper.statsIncludeParams
+  })
+  return prismaHelper.buildStatsResponse(member, created)
+}
+
+async function updateMemberStats(currentUser, handle, data) {
+  // Validate member
+  const member = await helper.getMemberByHandle(handle)
+  if (!helper.canManageMember(currentUser, member)) {
+    throw new errors.ForbiddenError('You are not allowed to update the member statistics.')
+  }
+
+  // Joi validation schema for payload
+  const { error: validationError4 } = memberStatsSchema.validate(data)
+  if (validationError4) {
+    throw new errors.BadRequestError(validationError4.details.map(e => e.message).join(', '))
+  }
+
+  // Find existing stats record
+  const stats = await prisma.memberStats.findFirst({
+    where: {
+      userId: member.userId,
+      groupId: data.groupId || null
+    },
+    include: prismaHelper.statsIncludeParams
+  })
+  if (!stats) {
+    throw new errors.NotFoundError('Member statistics not found')
+  }
+
+  const updatedBy = currentUser.handle || currentUser.sub
+
+  await prisma.$transaction(async (tx) => {
+    // Update main stats fields
+    await tx.memberStats.update({
+      where: { id: stats.id },
+      data: {
+        challenges: data.challenges !== undefined ? data.challenges : stats.challenges,
+        wins: data.wins !== undefined ? data.wins : stats.wins,
+        memberRatingId: data.maxRatingId !== undefined ? data.maxRatingId : stats.memberRatingId,
+        updatedBy
+      }
+    })
+    // DEVELOP upsert/delete
+    if (data.develop) {
+      let develop = stats.develop
+      if (develop) {
+        // Update develop fields
+        await tx.memberDevelopStats.update({
+          where: { id: develop.id },
+          data: {
+            challenges: data.develop.challenges !== undefined ? data.develop.challenges : develop.challenges,
+            wins: data.develop.wins !== undefined ? data.develop.wins : develop.wins,
+            mostRecentSubmission: data.develop.mostRecentSubmission ? new Date(data.develop.mostRecentSubmission) : develop.mostRecentSubmission,
+            mostRecentEventDate: data.develop.mostRecentEventDate ? new Date(data.develop.mostRecentEventDate) : develop.mostRecentEventDate,
+            updatedBy
+          }
+        })
+        // Items upsert/delete
+        const dbItemIds = new Set((develop.items || []).map(d => d.id))
+        const payloadItemIds = new Set((data.develop.items || []).filter(d => d.id).map(d => d.id))
+        // Delete items not in payload
+        for (const dbId of dbItemIds) {
+          if (!payloadItemIds.has(dbId)) {
+            await tx.memberDevelopStatsItem.delete({ where: { id: dbId } })
+          }
+        }
+        // Upsert items
+        for (const item of data.develop.items || []) {
+          if (item.id) {
+            await tx.memberDevelopStatsItem.update({
+              where: { id: item.id },
+              data: {
+                name: item.name,
+                subTrackId: item.subTrackId,
+                challenges: item.challenges,
+                wins: item.wins,
+                mostRecentSubmission: item.mostRecentSubmission ? new Date(item.mostRecentSubmission) : undefined,
+                mostRecentEventDate: item.mostRecentEventDate ? new Date(item.mostRecentEventDate) : undefined,
+                updatedBy
+              }
+            })
+          } else {
+            await tx.memberDevelopStatsItem.create({
+              data: {
+                developStatsId: develop.id,
+                name: item.name,
+                subTrackId: item.subTrackId,
+                challenges: item.challenges,
+                wins: item.wins,
+                mostRecentSubmission: item.mostRecentSubmission ? new Date(item.mostRecentSubmission) : undefined,
+                mostRecentEventDate: item.mostRecentEventDate ? new Date(item.mostRecentEventDate) : undefined,
+                createdBy: updatedBy
+              }
+            })
+          }
+        }
+      }
+    }
+    // DESIGN upsert/delete
+    if (data.design) {
+      let design = stats.design
+      if (design) {
+        // Update design fields
+        await tx.memberDesignStats.update({
+          where: { id: design.id },
+          data: {
+            challenges: data.design.challenges !== undefined ? data.design.challenges : design.challenges,
+            wins: data.design.wins !== undefined ? data.design.wins : design.wins,
+            mostRecentSubmission: data.design.mostRecentSubmission ? new Date(data.design.mostRecentSubmission) : design.mostRecentSubmission,
+            mostRecentEventDate: data.design.mostRecentEventDate ? new Date(data.design.mostRecentEventDate) : design.mostRecentEventDate,
+            updatedBy
+          }
+        })
+        // Items upsert/delete
+        const dbItemIds = new Set((design.items || []).map(d => d.id))
+        const payloadItemIds = new Set((data.design.items || []).filter(d => d.id).map(d => d.id))
+        // Delete items not in payload
+        for (const dbId of dbItemIds) {
+          if (!payloadItemIds.has(dbId)) {
+            await tx.memberDesignStatsItem.delete({ where: { id: dbId } })
+          }
+        }
+        // Upsert items
+        for (const item of data.design.items || []) {
+          if (item.id) {
+            await tx.memberDesignStatsItem.update({
+              where: { id: item.id },
+              data: {
+                name: item.name,
+                subTrackId: item.subTrackId,
+                challenges: item.challenges,
+                wins: item.wins,
+                mostRecentSubmission: item.mostRecentSubmission ? new Date(item.mostRecentSubmission) : undefined,
+                mostRecentEventDate: item.mostRecentEventDate ? new Date(item.mostRecentEventDate) : undefined,
+                updatedBy
+              }
+            })
+          } else {
+            await tx.memberDesignStatsItem.create({
+              data: {
+                designStatsId: design.id,
+                name: item.name,
+                subTrackId: item.subTrackId,
+                challenges: item.challenges,
+                wins: item.wins,
+                mostRecentSubmission: item.mostRecentSubmission ? new Date(item.mostRecentSubmission) : undefined,
+                mostRecentEventDate: item.mostRecentEventDate ? new Date(item.mostRecentEventDate) : undefined,
+                createdBy: updatedBy
+              }
+            })
+          }
+        }
+      }
+    }
+    // TODO: dataScience and copilot upsert/delete logic (similar pattern)
+  })
+
+  // Return updated record
+  const updated = await prisma.memberStats.findFirst({
+    where: { userId: member.userId, groupId: data.groupId || null },
+    include: prismaHelper.statsIncludeParams
+  })
+  return prismaHelper.buildStatsResponse(member, updated)
+}
+
 module.exports = {
   getDistribution,
   getHistoryStats,
   getMemberStats,
   getMemberSkills,
   createMemberSkills,
-  partiallyUpdateMemberSkills
+  partiallyUpdateMemberSkills,
+  createHistoryStats,
+  updateHistoryStats,
+  createMemberStats,
+  updateMemberStats
 }
 
 logger.buildService(module.exports)
