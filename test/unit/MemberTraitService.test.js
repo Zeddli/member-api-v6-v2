@@ -4,6 +4,7 @@
 
 require('../../app-bootstrap')
 const chai = require('chai')
+const chaiAsPromised = require('chai-as-promised');
 const service = require('../../src/services/MemberTraitService')
 const testHelper = require('../testHelper')
 
@@ -83,7 +84,7 @@ describe('member trait service unit tests', () => {
       try {
         await service.getTraits({}, member1.handle, { invalid: 'email' })
       } catch (e) {
-        should.equal(e.message.indexOf('"invalid" is not allowed') >= 0, true)
+        e.message.should.include('"query.invalid" is not allowed');
         return
       }
       throw new Error('should not reach here')
@@ -146,7 +147,7 @@ describe('member trait service unit tests', () => {
           traits: { data: [{ test: 111 }] }
         }])
       } catch (e) {
-        should.equal(e.message.indexOf('"traitId" must be one of') >= 0, true)
+        e.message.should.include('"data[0].traitId" must be one of');
         return
       }
       throw new Error('should not reach here')
@@ -160,7 +161,7 @@ describe('member trait service unit tests', () => {
           traits: { traitId: 'work', data: [{ test: 111 }] }
         }])
       } catch (e) {
-        should.equal(e.message.indexOf('"categoryName" must be a string') >= 0, true)
+        e.message.should.include('"data[0].categoryName" must be a string');
         return
       }
       throw new Error('should not reach here')
@@ -181,7 +182,7 @@ describe('member trait service unit tests', () => {
           other: 123
         }])
       } catch (e) {
-        should.equal(e.message.indexOf('"other" is not allowed') >= 0, true)
+        e.message.should.include('"data[0].other" is not allowed');
         return
       }
       throw new Error('should not reach here')
@@ -262,7 +263,7 @@ describe('member trait service unit tests', () => {
           traits: { data: [{ test: 111 }] }
         }])
       } catch (e) {
-        should.equal(e.message.indexOf('"categoryName" must be a string') >= 0, true)
+        e.message.should.include('"data[0].categoryName" must be a string');
         return
       }
       throw new Error('should not reach here')
@@ -277,7 +278,7 @@ describe('member trait service unit tests', () => {
           other: 123
         }])
       } catch (e) {
-        should.equal(e.message.indexOf('"other" is not allowed') >= 0, true)
+        e.message.should.include('"data[0].other" is not allowed');
         return
       }
       throw new Error('should not reach here')
@@ -328,7 +329,7 @@ describe('member trait service unit tests', () => {
         await service.removeTraits({ handle: 'admin', roles: ['admin'] }, member1.handle,
           { traitIds: 'work', invalid: 123 })
       } catch (e) {
-        should.equal(e.message.indexOf('"invalid" is not allowed') >= 0, true)
+        e.message.should.include('"query.invalid" is not allowed');
         return
       }
       throw new Error('should not reach here')

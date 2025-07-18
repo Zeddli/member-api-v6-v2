@@ -5,7 +5,8 @@
 require('../../app-bootstrap')
 const _ = require('lodash')
 const config = require('config')
-const chai = require('chai')
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const fs = require('fs')
 const path = require('path')
 const awsMock = require('aws-sdk-mock')
@@ -123,7 +124,7 @@ describe('member service unit tests', () => {
       try {
         await service.getMember({ isMachine: true }, member1.handle, { invalid: 'email' })
       } catch (e) {
-        should.equal(e.message.indexOf('"invalid" is not allowed') >= 0, true)
+        e.message.should.include('"query.invalid" is not allowed');
         return
       }
       throw new Error('should not reach here')
@@ -171,7 +172,7 @@ describe('member service unit tests', () => {
       try {
         await service.verifyEmail({ isMachine: true }, member1.handle, {})
       } catch (e) {
-        should.equal(e.message.indexOf('"token" is required') >= 0, true)
+        e.message.should.include('"query.token" is required');
         return
       }
       throw new Error('should not reach here')
@@ -181,7 +182,7 @@ describe('member service unit tests', () => {
       try {
         await service.verifyEmail({ isMachine: true }, member1.handle, { token: 'abc', invalid: 'email' })
       } catch (e) {
-        should.equal(e.message.indexOf('"invalid" is not allowed') >= 0, true)
+        e.message.should.include('"query.invalid" is not allowed');
         return
       }
       throw new Error('should not reach here')
@@ -246,7 +247,7 @@ describe('member service unit tests', () => {
           email: 'abc'
         })
       } catch (e) {
-        should.equal(e.message.indexOf('"email" must be a valid email') >= 0, true)
+        e.message.should.include('"data.email" must be a valid email');
         return
       }
       throw new Error('should not reach here')
@@ -258,7 +259,7 @@ describe('member service unit tests', () => {
           other: 'abc'
         })
       } catch (e) {
-        should.equal(e.message.indexOf('"other" is not allowed') >= 0, true)
+        e.message.should.include('"data.other" is not allowed');
         return
       }
       throw new Error('should not reach here')
@@ -306,7 +307,7 @@ describe('member service unit tests', () => {
           }
         })
       } catch (e) {
-        should.equal(e.message.indexOf('"photo" is required') >= 0, true)
+        e.message.should.include('"files.photo" is required');
         return
       }
       throw new Error('should not reach here')
@@ -316,7 +317,7 @@ describe('member service unit tests', () => {
       try {
         await service.uploadPhoto({ handle: 'admin', roles: ['admin'] }, member2.handle, {})
       } catch (e) {
-        should.equal(e.message.indexOf('"photo" is required') >= 0, true)
+        e.message.should.include('"files.photo" is required');
         return
       }
       throw new Error('should not reach here')
@@ -351,7 +352,7 @@ describe('member service unit tests', () => {
           other: 'invalid'
         })
       } catch (e) {
-        should.equal(e.message.indexOf('"other" is not allowed') >= 0, true)
+        e.message.should.include('"files.other" is not allowed');
         return
       }
       throw new Error('should not reach here')
