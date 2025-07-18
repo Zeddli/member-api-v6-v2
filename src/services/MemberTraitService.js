@@ -230,14 +230,14 @@ async function getTraits (currentUser, handle, query) {
   return result
 }
 
-getTraits.schema = {
+getTraits.schema = Joi.object().keys({
   currentUser: Joi.any(),
   handle: Joi.string().required(),
   query: Joi.object().keys({
     traitIds: Joi.string(),
     fields: Joi.string()
   })
-}
+});
 
 /**
  * Build prisma data for creating/updating traits
@@ -412,7 +412,7 @@ const traitSchemas = {
 const traitSchemaSwitch = _.map(_.keys(traitSchemas,
   k => ({ is: k, then: traitSchemas[k] })))
 
-createTraits.schema = {
+createTraits.schema = Joi.object().keys({
   currentUser: Joi.any(),
   handle: Joi.string().required(),
   data: Joi.array().items(Joi.object().keys({
@@ -423,13 +423,12 @@ createTraits.schema = {
       data: Joi.alternatives().try(
         Joi.when(Joi.ref('traitId'), {
           is: Joi.string().valid(...TRAIT_IDS),
-          switch: traitSchemaSwitch,
           otherwise: Joi.forbidden()
         })
       )
     })
   }).required()).min(1).required()
-}
+});
 
 /**
  * Update member traits.
@@ -483,7 +482,7 @@ async function updateTraits (currentUser, handle, data) {
   return result
 }
 
-updateTraits.schema = createTraits.schema
+updateTraits.schema = createTraits.schema;
 
 /**
  * Remove member traits. If traitIds query parameter is not provided, then all member traits are removed.
@@ -541,13 +540,13 @@ async function removeTraits (currentUser, handle, query) {
   }
 }
 
-removeTraits.schema = {
+removeTraits.schema = Joi.object().keys({
   currentUser: Joi.any(),
   handle: Joi.string().required(),
   query: Joi.object().keys({
     traitIds: Joi.string() // if not provided, then all member traits are removed
-  })
-}
+  }).unknown(false)
+});
 /**
 * This function is used to calculate a deduction to the skill score used in the talent search
 * We have a calculation based on traits and if they are defined or not, including work history

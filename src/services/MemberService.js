@@ -138,13 +138,13 @@ async function getMember (currentUser, handle, query) {
   return cleanMember(currentUser, member, selectFields)
 }
 
-getMember.schema = {
+getMember.schema = Joi.object().keys({
   currentUser: Joi.any(),
   handle: Joi.string().required(),
   query: Joi.object().keys({
     fields: Joi.string()
+  }).unknown(false)
   })
-}
 
 /**
  * Get member profile completeness data.
@@ -262,14 +262,14 @@ async function getProfileCompleteness (currentUser, handle, query) {
   return response
 }
 
-getProfileCompleteness.schema = {
+getProfileCompleteness.schema = Joi.object().keys({
   currentUser: Joi.any(),
   handle: Joi.string().required(),
   query: Joi.object().keys({
     fields: Joi.string(),
     toast: Joi.string()
   })
-}
+})
 
 /**
  * Compute the current user's userId
@@ -288,12 +288,12 @@ async function getMemberUserIdSignature (currentUser, query) {
   return { uid_signature: userIdHash }
 }
 
-getMemberUserIdSignature.schema = {
+getMemberUserIdSignature.schema = Joi.object().keys({
   currentUser: Joi.any(),
   query: Joi.object().keys({
     type: Joi.string().valid('userflow').required()
   }).required()
-}
+})
 
 /**
  * Update member profile data, only passed fields will be updated.
@@ -393,7 +393,7 @@ async function updateMember (currentUser, handle, query, data) {
   return cleanMember(currentUser, result, selectFields)
 }
 
-updateMember.schema = {
+updateMember.schema = Joi.object().keys({
   currentUser: Joi.any(),
   handle: Joi.string().required(),
   query: Joi.object().keys({
@@ -422,7 +422,7 @@ updateMember.schema = {
     availableForGigs: Joi.bool().allow(null),
     namesAndHandleAppearance: Joi.string().allow(null)
   }).required()
-}
+})
 
 /**
  * Verify email.
@@ -466,23 +466,33 @@ async function verifyEmail (currentUser, handle, query) {
   }
   member.updatedAt = new Date()
   member.updatedBy = currentUser.userId || currentUser.sub
+
+  // Only update allowed fields (exclude id and relations)
+  const updateData = {}
+  for (const key of Object.keys(member)) {
+    // Exclude id, maxRating, and any other relations
+    if (key !== 'id' && key !== 'maxRating') {
+      updateData[key] = member[key]
+    }
+  }
+
   // update member in db
   const result = await prisma.member.update({
     where: { userId: member.userId },
-    data: member
+    data: updateData
   })
   prismaHelper.convertMember(result)
   await helper.postBusEvent(constants.TOPICS.MemberUpdated, result)
   return { emailChangeCompleted, verifiedEmail }
 }
 
-verifyEmail.schema = {
+verifyEmail.schema = Joi.object().keys({
   currentUser: Joi.any(),
   handle: Joi.string().required(),
   query: Joi.object().keys({
     token: Joi.string().required()
   }).required()
-}
+})
 
 /**
  * Upload photo.
@@ -556,13 +566,13 @@ async function uploadPhoto (currentUser, handle, files) {
   return { photoURL }
 }
 
-uploadPhoto.schema = {
+uploadPhoto.schema = Joi.object().keys({
   currentUser: Joi.any(),
   handle: Joi.string().required(),
   files: Joi.object().keys({
     photo: Joi.object().required()
   }).required()
-}
+})
 
 module.exports = {
   getMember,
